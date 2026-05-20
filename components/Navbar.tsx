@@ -3,6 +3,7 @@
 import { Handbag, Heart, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +22,8 @@ import logo from "@/app/assets/logo.png";
 import { cn } from "@/lib/utils";
 
 const navigationLinks = [
-  { href: "#", label: "Bébé fille", active: true },
+  { href: "/products", label: "Boutique", match: "/products" },
+  { href: "#", label: "Bébé fille" },
   { href: "#", label: "Bébé garçon" },
   { href: "#", label: "Idée cadeaux" },
   { href: "/#promotions", label: "Promotion" },
@@ -34,6 +36,12 @@ const navLinkClassName =
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (link: (typeof navigationLinks)[number]) =>
+    link.match
+      ? pathname === link.match || pathname.startsWith(`${link.match}/`)
+      : false;
 
   return (
     <header className="sticky top-0 z-50">
@@ -63,7 +71,7 @@ export default function Navbar() {
                         <Link
                           className={cn(
                             "block rounded-md px-3 py-2.5 text-sm font-medium text-[#001B36] transition-colors hover:bg-[#001B36]/5 hover:text-[#9B4D44]",
-                            link.active && "text-[#9B4D44]",
+                            isActive(link) && "text-[#9B4D44]",
                           )}
                           href={link.href}
                           onClick={() => setMenuOpen(false)}
@@ -95,13 +103,13 @@ export default function Navbar() {
               {navigationLinks.map((link) => (
                 <NavigationMenuItem key={link.label}>
                   <NavigationMenuLink
-                    active={link.active}
+                    active={isActive(link)}
                     asChild
                     className={navLinkClassName}
                   >
                     <Link href={link.href}>
                       <span>{link.label}</span>
-                      {link.active ? (
+                      {isActive(link) ? (
                         <span
                           aria-hidden
                           className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full bg-[#9B4D44] lg:inset-x-3"

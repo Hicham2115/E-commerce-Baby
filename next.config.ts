@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         hostname: "unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.shopify.com",
+        pathname: "/**",
+      },
     ],
   },
 };
