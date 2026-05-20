@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import CartButton from "@/components/cart/CartButton";
+import FavoritesButton from "@/components/favorites/FavoritesButton";
 import PromoBar from "@/components/PromoBar";
 import logo from "@/app/assets/logo.png";
 import { cn } from "@/lib/utils";
@@ -124,17 +125,7 @@ export default function Navbar() {
           </NavigationMenu>
 
           <div className="flex flex-1 items-center justify-end gap-1 md:flex-none">
-            <Button
-              aria-label="Liste de souhaits"
-              asChild
-              className="size-10 text-[#001B36] hover:bg-[#001B36]/5 hover:text-[#9B4D44]"
-              size="icon"
-              variant="ghost"
-            >
-              <Link href="#">
-                <Heart className="size-5" strokeWidth={1.75} />
-              </Link>
-            </Button>
+            <FavoritesButton />
             <CartButton />
           </div>
         </div>

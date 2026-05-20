@@ -1,7 +1,8 @@
 "use client";
 
 import CartDrawer from "@/components/cart/CartDrawer";
-import { CartProvider } from "@/components/cart/CartProvider";
+import FavoritesDrawer from "@/components/favorites/FavoritesDrawer";
+import StoreHydration from "@/components/providers/StoreHydration";
 
 export default function AppProviders({
   children,
@@ -9,9 +10,11 @@ export default function AppProviders({
   children: React.ReactNode;
 }) {
   return (
-    <CartProvider>
+    <>
+      <StoreHydration />
       {children}
       <CartDrawer />
-    </CartProvider>
+      <FavoritesDrawer />
+    </>
   );
 }

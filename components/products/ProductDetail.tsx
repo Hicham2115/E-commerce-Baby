@@ -11,7 +11,8 @@ import {
   WashingMachine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/components/cart/CartProvider";
+import { useCart } from "@/stores/cart-store";
+import FavoriteToggle from "@/components/favorites/FavoriteToggle";
 import {
   formatPrice,
   getDiscountLabel,
@@ -125,9 +126,23 @@ export default function ProductDetail({ product }: ProductDetailProps) {
         <StarRating />
       </div>
 
-      <h1 className="font-heading mt-4 text-3xl font-medium leading-tight text-[#001B36] md:text-4xl lg:text-[2.75rem]">
-        {product.title}
-      </h1>
+      <div className="mt-4 flex items-start justify-between gap-4">
+        <h1 className="font-heading text-3xl font-medium leading-tight text-[#001B36] md:text-4xl lg:text-[2.75rem]">
+          {product.title}
+        </h1>
+        <FavoriteToggle
+          className="shrink-0 shadow-md"
+          product={{
+            handle: product.handle,
+            title: product.title,
+            imageUrl: product.images[0]?.url ?? null,
+            imageAlt: product.images[0]?.altText ?? product.title,
+            price: product.price,
+            currencyCode: product.currencyCode,
+            availableForSale: product.availableForSale,
+          }}
+        />
+      </div>
 
       <div className="mt-5 flex flex-wrap items-baseline gap-3">
         <span className="font-heading text-2xl text-[#9B4D44] md:text-3xl">
