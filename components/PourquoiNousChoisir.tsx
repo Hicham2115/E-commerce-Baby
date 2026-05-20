@@ -21,7 +21,7 @@ const features = [
 
 export default function PourquoiNousChoisir() {
   return (
-    <section className="bg-white px-4 py-16 md:px-8 md:py-24">
+    <section id="about" className="bg-white px-4 py-16 md:px-8 md:py-24">
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:gap-14">
         <div className="relative pb-16 sm:pb-20">
           <div className="group relative aspect-[4/5] overflow-hidden rounded-3xl sm:aspect-[3/4]">

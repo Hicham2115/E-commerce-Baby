@@ -1,49 +1,56 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import product1 from "@/app/assets/Products/natracare-aMca3BHUvmU-unsplash.jpg";
+import product2 from "@/app/assets/Products/photo-1690844623570-b5304dceae3b.avif";
+import product3 from "@/app/assets/Products/photo-1695998575453-f155392a95ba.avif";
+import product4 from "@/app/assets/Products/photo-1734599406023-80b2212b713b.avif";
 
-const products = [
+const products: {
+  name: string;
+  price: string;
+  oldPrice: string | null;
+  discount: string;
+  image: StaticImageData;
+  href: string;
+}[] = [
   {
     name: "Ensemble Garçon Chic avec Bretelles",
-    price: "199.00",
-    oldPrice: "269.00",
+    price: "199",
+    oldPrice: "269",
     discount: "-26%",
-    image:
-      "https://images.unsplash.com/photo-1586105251261-72a756659a11?auto=format&fit=crop&w=600&q=80",
+    image: product1,
     href: "https://chahrazadbaby.com/",
   },
   {
     name: "Ensemble pyjama Maman & Bébé matchy matchy",
-    price: "379.00",
-    oldPrice: "499.00",
+    price: "379",
+    oldPrice: "499",
     discount: "-24%",
-    image:
-      "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=600&q=80",
+    image: product2,
     href: "https://chahrazadbaby.com/",
   },
   {
     name: "Bonnet naissance 100% coton — maternité",
-    price: "29.00",
-    oldPrice: "69.00",
+    price: "29",
+    oldPrice: "69",
     discount: "-58%",
-    image:
-      "https://images.unsplash.com/photo-1515488042361-ee00e9dad4f4?auto=format&fit=crop&w=600&q=80",
+    image: product3,
     href: "https://chahrazadbaby.com/",
   },
   {
     name: "Pack grenouillères bébé 100% coton",
-    price: "199.00",
+    price: "199",
     oldPrice: null,
     discount: "Pack 2 à 6 pcs",
-    image:
-      "https://images.unsplash.com/photo-1587654789021-51765eeb5600?auto=format&fit=crop&w=600&q=80",
+    image: product4,
     href: "https://chahrazadbaby.com/",
   },
 ];
 
 export default function FeaturedProducts() {
   return (
-    <section className="bg-white px-4 py-16 md:px-8 md:py-24">
+    <section id="products" className="bg-white px-4 py-16 md:px-8 md:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 text-center md:mb-14">
           <p className="text-xs font-semibold tracking-[0.2em] text-[#9B4D44] uppercase">
@@ -86,11 +93,11 @@ export default function FeaturedProducts() {
                 </h3>
                 <div className="mt-3 flex items-baseline gap-2">
                   <span className="font-heading text-lg font-medium text-[#001B36]">
-                    {product.price} د.م.
+                    {product.price} dh
                   </span>
                   {product.oldPrice ? (
                     <span className="text-xs text-[#5C5C5C] line-through">
-                      {product.oldPrice} د.م.
+                      {product.oldPrice} dh
                     </span>
                   ) : null}
                 </div>

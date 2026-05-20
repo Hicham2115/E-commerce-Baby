@@ -1,6 +1,9 @@
+"use client";
+
 import { Handbag, Heart, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -17,33 +20,28 @@ import PromoBar from "@/components/PromoBar";
 import logo from "@/app/assets/logo.png";
 import { cn } from "@/lib/utils";
 
-const STORE_URL = "https://chahrazadbaby.com/";
-
-const navigationLinks: {
-  href: string;
-  label: string;
-  active?: boolean;
-}[] = [
-  { href: `${STORE_URL}`, label: "Bébé fille", active: true },
-  { href: `${STORE_URL}`, label: "Bébé garçon" },
-  { href: `${STORE_URL}`, label: "Idée cadeaux" },
-  { href: `${STORE_URL}`, label: "Promotion" },
-  { href: `${STORE_URL}`, label: "Blog" },
-  { href: `${STORE_URL}`, label: "Contact" },
-  { href: `${STORE_URL}`, label: "À propos" },
+const navigationLinks = [
+  { href: "#", label: "Bébé fille", active: true },
+  { href: "#", label: "Bébé garçon" },
+  { href: "#", label: "Idée cadeaux" },
+  { href: "/#promotions", label: "Promotion" },
+  { href: "/#contact", label: "Contact" },
+  { href: "/#about", label: "À propos" },
 ];
 
 const navLinkClassName =
   "relative rounded-md bg-transparent px-2.5 py-2 text-sm font-medium text-[#001B36] transition-colors hover:bg-transparent hover:text-[#9B4D44] data-active:text-[#9B4D44] lg:px-3";
 
 export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50">
       <PromoBar />
       <div className="border-b border-[#E8E4DC] bg-[#F9F8F6]/90 backdrop-blur-md">
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 md:px-8">
           <div className="flex min-w-0 flex-1 items-center gap-2 md:flex-none">
-            <Popover>
+            <Popover open={menuOpen} onOpenChange={setMenuOpen}>
               <PopoverTrigger asChild>
                 <Button
                   aria-label="Ouvrir le menu"
@@ -65,11 +63,10 @@ export default function Navbar() {
                         <Link
                           className={cn(
                             "block rounded-md px-3 py-2.5 text-sm font-medium text-[#001B36] transition-colors hover:bg-[#001B36]/5 hover:text-[#9B4D44]",
-                            link.active === true && "text-[#9B4D44]",
+                            link.active && "text-[#9B4D44]",
                           )}
                           href={link.href}
-                          rel="noopener noreferrer"
-                          target="_blank"
+                          onClick={() => setMenuOpen(false)}
                         >
                           {link.label}
                         </Link>
@@ -102,11 +99,7 @@ export default function Navbar() {
                     asChild
                     className={navLinkClassName}
                   >
-                    <Link
-                      href={link.href}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
+                    <Link href={link.href}>
                       <span>{link.label}</span>
                       {link.active ? (
                         <span
@@ -129,11 +122,7 @@ export default function Navbar() {
               size="icon"
               variant="ghost"
             >
-              <Link
-                href={`${STORE_URL}`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+              <Link href="#">
                 <Heart className="size-5" strokeWidth={1.75} />
               </Link>
             </Button>
@@ -144,11 +133,7 @@ export default function Navbar() {
               size="icon"
               variant="ghost"
             >
-              <Link
-                href={`${STORE_URL}`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+              <Link href="#">
                 <Handbag className="size-5" strokeWidth={1.75} />
                 <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-[#9B4D44] text-[10px] font-semibold text-white">
                   0

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Hero() {
   return (
-    <section className="bg-[#F9F8F6] px-4 py-12 md:px-8 md:py-16 lg:py-20">
+    <section id="hero" className="bg-[#F9F8F6] px-4 py-12 md:px-8 md:py-16 lg:py-20">
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Left column */}
         <div className="flex flex-col gap-6 lg:gap-8">
@@ -42,7 +42,7 @@ export default function Hero() {
               variant="outline"
               className="h-12 rounded-full border-[#D4D0C8] bg-white px-8 text-sm font-medium text-[#001B36] hover:bg-white/80"
             >
-              <Link href="#promotions">Offres spéciales</Link>
+              <Link href="/#promotions">Offres spéciales</Link>
             </Button>
           </div>
         </div>

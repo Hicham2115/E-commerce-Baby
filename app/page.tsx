@@ -4,16 +4,20 @@ import CategoryCards from "@/components/CategoryCards";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import PourquoiNousChoisir from "@/components/PourquoiNousChoisir";
 import MomentsPrecieux from "@/components/MomentsPrecieux";
+import Footer from "@/components/Footer";
 
 export default function HomePage() {
   return (
-    <main>
-      <Navbar />
-      <Hero />
-      <CategoryCards />
-      <FeaturedProducts />
-      <PourquoiNousChoisir />
-      <MomentsPrecieux />
-    </main>
+    <>
+      <main>
+        <Navbar />
+        <Hero />
+        <CategoryCards />
+        <PourquoiNousChoisir />
+        <MomentsPrecieux />
+        <FeaturedProducts />
+      </main>
+      <Footer />
+    </>
   );
 }

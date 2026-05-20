@@ -24,7 +24,7 @@ const categories = [
 
 export default function CategoryCards() {
   return (
-    <section className="bg-[#F9F8F6] px-4 pb-16 md:px-8 md:pb-20">
+    <section id="categories" className="bg-[#F9F8F6] px-4 pb-16 md:px-8 md:pb-20">
       <div className="mx-auto mb-8 max-w-7xl text-center md:mb-10">
         <p className="text-xs font-semibold tracking-[0.2em] text-[#9B4D44] uppercase">
           #Chahrazad-Baby

@@ -84,7 +84,7 @@ const marqueeItems = [
 
 export default function MomentsPrecieux() {
   return (
-    <section className="relative overflow-hidden bg-[#F9F8F6] px-4 py-16 md:px-8 md:py-24">
+    <section id="univers" className="relative overflow-hidden bg-[#F9F8F6] px-4 py-16 md:px-8 md:py-24">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-20 right-0 h-72 w-72 rounded-full bg-[#D6E4EE]/50 blur-3xl md:h-96 md:w-96"
