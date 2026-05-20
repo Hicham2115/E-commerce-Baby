@@ -5,7 +5,7 @@ import {
   type CategoryAttribute,
   type CategoryMetafieldNode,
 } from "@/lib/shopify/category-metafields";
-import { matchesCategory } from "@/lib/shopify/filters";
+import { extractGenresFromOptions } from "@/lib/shopify/product-options";
 import { storefrontFetch } from "@/lib/shopify/storefront";
 import type { ShopifyProduct } from "@/lib/shopify/types";
 
@@ -40,8 +40,12 @@ export type ShopifyProductDetail = {
   currencyCode: string;
   isNew: boolean;
   sizes: { label: string; variantId: string | null }[];
-  genre: string | null;
+  /** Variant option "Genre" values */
+  genres: string[];
+  /** French label for breadcrumbs (derived from taxonomy or product type) */
   category: string | null;
+  /** Shopify taxonomy category name (Stuffed Animals, Bedding, …) */
+  categoryName: string | null;
   collectionLabel: string | null;
   categoryAttributes: CategoryAttribute[];
 };
@@ -55,6 +59,8 @@ type ProductNode = {
   availableForSale: boolean;
   productType: string;
   tags: string[];
+  category: { name: string } | null;
+  options: { name: string; values: string[] }[];
   featuredImage: { url: string; altText: string | null } | null;
   images: { edges: { node: ProductImage }[] };
   variants: {
@@ -90,6 +96,13 @@ const PRODUCT_QUERY = `
       availableForSale
       productType
       tags
+      category {
+        name
+      }
+      options {
+        name
+        values
+      }
       featuredImage {
         url
         altText
@@ -187,16 +200,6 @@ function normalize(s: string) {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
-}
-
-function detectGenre(tags: string[]): string | null {
-  for (const tag of tags) {
-    const n = normalize(tag);
-    if (n.includes("garcon") || n.includes("garçon")) return "Bébé Garçon";
-    if (n.includes("fille")) return "Bébé Fille";
-    if (n.includes("unisexe")) return "Unisexe";
-  }
-  return null;
 }
 
 function detectCategory(productType: string, tags: string[]): string | null {
@@ -307,8 +310,11 @@ function mapProductDetail(node: ProductNode): ShopifyProductDetail {
       return tag === "nouveau" || tag === "new" || tag === "nouveauté";
     }),
     sizes: extractSizes(variants),
-    genre: detectGenre(node.tags),
-    category: detectCategory(node.productType, node.tags),
+    genres: extractGenresFromOptions(node.options),
+    categoryName: node.category?.name?.trim() || null,
+    category:
+      node.category?.name?.trim() ||
+      detectCategory(node.productType, node.tags),
     collectionLabel: detectCollectionLabel(node.tags),
     categoryAttributes: parseCategoryMetafields(node.metafields),
   };
@@ -350,6 +356,9 @@ function mapRecommendationNode(node: RecommendationNode): ShopifyProduct {
       const tag = t.toLowerCase();
       return tag === "nouveau" || tag === "new" || tag === "nouveauté";
     }),
+    genres: [],
+    sizes: [],
+    categoryName: null,
   };
 }
 
@@ -386,21 +395,19 @@ export async function fetchSimilarProducts(
   }
 
   const catalog = await fetchCatalog();
-  const categoryKey = product.category
-    ? normalize(product.category).replace(/s$/, "")
-    : normalize(product.productType);
 
   return catalog.products
     .filter(
       (p) =>
         p.handle !== product.handle &&
-        (p.productType === product.productType ||
-          matchesCategory(p, categoryKey) ||
-          p.tags.some((tag) =>
-            product.tags.some(
-              (t) => normalize(t) === normalize(tag) && t.length > 2,
-            ),
-          )),
+        (product.categoryName && p.categoryName
+          ? normalize(p.categoryName) === normalize(product.categoryName)
+          : p.productType === product.productType ||
+            p.tags.some((tag) =>
+              product.tags.some(
+                (t) => normalize(t) === normalize(tag) && t.length > 2,
+              ),
+            )),
     )
     .slice(0, limit);
 }

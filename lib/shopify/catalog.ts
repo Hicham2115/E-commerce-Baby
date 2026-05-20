@@ -1,3 +1,5 @@
+import { parseMetafieldValues } from "@/lib/shopify/metafield-values";
+import { extractGenresFromOptions } from "@/lib/shopify/product-options";
 import { storefrontFetch } from "@/lib/shopify/storefront";
 import type {
   CatalogSearchParams,
@@ -26,6 +28,9 @@ const CATALOG_QUERY = `
           availableForSale
           productType
           tags
+          category {
+            name
+          }
           featuredImage {
             url
             altText
@@ -41,6 +46,14 @@ const CATALOG_QUERY = `
               amount
             }
           }
+          options {
+            name
+            values
+          }
+          tailleMetafield: metafield(namespace: "custom", key: "taille") {
+            value
+            type
+          }
         }
       }
     }
@@ -54,11 +67,14 @@ type ProductNode = {
   availableForSale: boolean;
   productType: string;
   tags: string[];
+  category: { name: string } | null;
   featuredImage: { url: string; altText: string | null } | null;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
   compareAtPriceRange: {
     minVariantPrice: { amount: string } | null;
   } | null;
+  options: { name: string; values: string[] }[];
+  tailleMetafield: { value: string; type: string } | null;
 };
 
 function mapProduct(node: ProductNode): ShopifyProduct {
@@ -83,6 +99,9 @@ function mapProduct(node: ProductNode): ShopifyProduct {
       const tag = t.toLowerCase();
       return tag === "nouveau" || tag === "new" || tag === "nouveauté";
     }),
+    genres: extractGenresFromOptions(node.options),
+    sizes: parseMetafieldValues(node.tailleMetafield?.value),
+    categoryName: node.category?.name?.trim() || null,
   };
 }
 

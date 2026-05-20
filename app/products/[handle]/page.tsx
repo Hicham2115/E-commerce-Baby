@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import ProductDetail from "@/components/products/ProductDetail";
 import ProductGallery from "@/components/products/ProductGallery";
 import SimilarProducts from "@/components/products/SimilarProducts";
+import { genreValueToSlug } from "@/lib/shopify/filters";
 import {
   fetchProductByHandle,
   fetchSimilarProducts,
@@ -39,10 +40,20 @@ export default async function ProductPage({ params }: PageProps) {
 
     const similarProducts = await fetchSimilarProducts(product);
 
+    const genreSlug =
+      product.genres.length === 1
+        ? genreValueToSlug(product.genres[0])
+        : undefined;
+
     const breadcrumbs = [
       { label: "Accueil", href: "/" },
-      ...(product.genre
-        ? [{ label: product.genre, href: "/products" }]
+      ...(genreSlug && product.genres[0]
+        ? [
+            {
+              label: product.genres[0],
+              href: `/products?genre=${genreSlug}`,
+            },
+          ]
         : [{ label: "Boutique", href: "/products" }]),
       { label: product.title, href: null },
     ] as const;

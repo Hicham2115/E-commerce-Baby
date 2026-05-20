@@ -1,39 +1,81 @@
+import { normalizeFilterValue } from "@/lib/shopify/metafield-values";
 import type { CatalogSearchParams, ShopifyProduct } from "@/lib/shopify/types";
 
+/** URL slug → Shopify variant option "Genre" value */
+const GENRE_SLUG_TO_SHOPIFY: Record<string, string> = {
+  fille: "Fille",
+  garcon: "Garçon",
+  unisexe: "Unisexe",
+};
+
 export const GENRE_OPTIONS = [
-  { value: "fille", label: "Fille" },
-  { value: "garcon", label: "Garçon" },
-  { value: "unisexe", label: "Unisexe" },
+  { value: "fille", label: "Fille", shopify: "Fille" },
+  { value: "garcon", label: "Garçon", shopify: "Garçon" },
+  { value: "unisexe", label: "Unisexe", shopify: "Unisexe" },
 ] as const;
+
+/** URL slug → Shopify product category name (Standard Product Taxonomy) */
+const CATEGORY_SLUG_TO_SHOPIFY: Record<string, string> = {
+  "stuffed-animals": "Stuffed Animals",
+  bedding: "Bedding",
+  shoes: "Shoes",
+  blankets: "Blankets",
+};
 
 export const CATEGORY_OPTIONS = [
-  { value: "grenouilleres", label: "Grenouillères" },
-  { value: "ensembles", label: "Ensembles" },
-  { value: "accessoires", label: "Accessoires" },
+  { value: "stuffed-animals", label: "Peluches", shopify: "Stuffed Animals" },
+  { value: "bedding", label: "Literie", shopify: "Bedding" },
+  { value: "shoes", label: "Chaussures", shopify: "Shoes" },
+  { value: "blankets", label: "Couvertures", shopify: "Blankets" },
 ] as const;
 
-export const SIZE_OPTIONS = ["0M", "1M", "3M", "6M", "9M", "12M"] as const;
+/** Matches custom.taille list values in Shopify */
+export const SIZE_OPTIONS = [
+  "0-3 mois",
+  "3-6 mois",
+  "6-12 mois",
+  "1-2 ans",
+] as const;
 
 export const PRICE_MAX = 1500;
 
 function normalize(s: string) {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  return normalizeFilterValue(s);
 }
 
-function matchesTag(product: ShopifyProduct, needle: string) {
-  const n = normalize(needle);
-  return product.tags.some((t) => normalize(t).includes(n));
+function resolveGenreShopifyValue(slug: string): string {
+  return GENRE_SLUG_TO_SHOPIFY[slug] ?? slug;
 }
 
-export function matchesCategory(product: ShopifyProduct, category: string) {
-  const n = normalize(category);
-  const type = normalize(product.productType);
-  const title = normalize(product.title);
-  if (type.includes(n) || title.includes(n)) return true;
-  return matchesTag(product, n);
+export function genreValueToSlug(value: string): string | undefined {
+  const entry = GENRE_OPTIONS.find(
+    (opt) => normalize(opt.shopify) === normalize(value),
+  );
+  return entry?.value;
+}
+
+function matchesGenre(product: ShopifyProduct, genreSlug: string): boolean {
+  if (product.genres.length === 0) return false;
+  const expected = resolveGenreShopifyValue(genreSlug);
+  const n = normalize(expected);
+  return product.genres.some((g) => normalize(g) === n);
+}
+
+function matchesSize(product: ShopifyProduct, size: string): boolean {
+  if (product.sizes.length === 0) return false;
+
+  const n = normalize(size);
+  return product.sizes.some((s) => normalize(s) === n);
+}
+
+function resolveCategoryShopifyName(slug: string): string {
+  return CATEGORY_SLUG_TO_SHOPIFY[slug] ?? slug;
+}
+
+export function matchesCategory(product: ShopifyProduct, categorySlug: string) {
+  if (!product.categoryName) return false;
+  const expected = resolveCategoryShopifyName(categorySlug);
+  return normalize(product.categoryName) === normalize(expected);
 }
 
 export function filterProducts(
@@ -43,7 +85,7 @@ export function filterProducts(
   let result = [...products];
 
   if (params.genre) {
-    result = result.filter((p) => matchesTag(p, params.genre!));
+    result = result.filter((p) => matchesGenre(p, params.genre!));
   }
 
   if (params.category) {
@@ -51,11 +93,7 @@ export function filterProducts(
   }
 
   if (params.size) {
-    result = result.filter(
-      (p) =>
-        matchesTag(p, params.size!) ||
-        p.tags.some((t) => normalize(t) === normalize(params.size!)),
-    );
+    result = result.filter((p) => matchesSize(p, params.size!));
   }
 
   if (params.priceMax) {

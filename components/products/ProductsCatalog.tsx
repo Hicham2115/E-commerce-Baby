@@ -173,11 +173,11 @@ export default function ProductsCatalog({
       </FilterSection>
 
       <FilterSection title="Taille">
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {SIZE_OPTIONS.map((size) => (
             <button
               key={size}
-              className={`rounded-lg border py-2.5 text-sm transition-colors ${
+              className={`rounded-lg border px-2 py-2.5 text-xs transition-colors sm:text-sm ${
                 current.size === size
                   ? "border-[#001B36] bg-[#001B36] text-white"
                   : "border-[#D4D0C8] bg-white text-[#001B36] hover:border-[#001B36]/40"
@@ -294,8 +294,8 @@ export default function ProductsCatalog({
                 Aucun produit trouvé
               </p>
               <p className="mx-auto mt-3 max-w-sm text-sm text-[#5C5C5C]">
-                Modifiez vos filtres ou ajoutez des produits dans Shopify avec
-                les bons tags (fille, garçon, tailles…).
+                Modifiez vos filtres ou configurez les variantes Genre, la
+                metafield Taille et la Catégorie produit dans Shopify.
               </p>
               {error ? (
                 <p className="mt-4 text-xs text-[#9B4D44]">{error}</p>

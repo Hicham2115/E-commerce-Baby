@@ -4,6 +4,7 @@ import CategoryCards from "@/components/CategoryCards";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import PourquoiNousChoisir from "@/components/PourquoiNousChoisir";
 import MomentsPrecieux from "@/components/MomentsPrecieux";
+import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 
 export default function HomePage() {
@@ -16,6 +17,7 @@ export default function HomePage() {
         <PourquoiNousChoisir />
         <MomentsPrecieux />
         <FeaturedProducts />
+        <Testimonials />
       </main>
       <Footer />
     </>

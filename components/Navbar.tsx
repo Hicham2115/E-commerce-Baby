@@ -26,7 +26,7 @@ const navigationLinks = [
   { href: "#", label: "Bébé fille" },
   { href: "#", label: "Bébé garçon" },
   { href: "#", label: "Idée cadeaux" },
-  { href: "/#promotions", label: "Promotion" },
+  // { href: "/#promotions", label: "Promotion" },
   { href: "/#contact", label: "Contact" },
   { href: "/#about", label: "À propos" },
 ];
