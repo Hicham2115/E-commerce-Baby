@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-
-const STORE_URL = "https://chahrazadbaby.com/";
+import { productsUrlByGenre } from "@/lib/shopify/filters";
 
 const categories = [
   {
-    href: STORE_URL,
+    href: productsUrlByGenre("fille"),
     title: "Bébé fille",
     subtitle: "Packs clinique, grenouillères, ensembles & accessoires",
     image:
@@ -13,7 +12,7 @@ const categories = [
     alt: "Collection vêtements bébé fille Chahrazad Baby",
   },
   {
-    href: STORE_URL,
+    href: productsUrlByGenre("garcon"),
     title: "Bébé garçon",
     subtitle: "Barboteuses, pyjamas, sorties de bain & baptême",
     image:
@@ -40,8 +39,6 @@ export default function CategoryCards() {
             key={category.title}
             className="group relative block aspect-[5/4] overflow-hidden rounded-2xl shadow-sm transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_20px_40px_-12px_rgba(0,27,54,0.25)] sm:aspect-[4/3] md:rounded-3xl"
             href={category.href}
-            rel="noopener noreferrer"
-            target="_blank"
           >
             <Image
               alt={category.alt}
@@ -78,10 +75,8 @@ export default function CategoryCards() {
       <div className="mx-auto mt-6 flex max-w-7xl justify-center">
         <Link
           className="text-sm font-medium text-[#9B4D44] underline-offset-4 transition-colors hover:text-[#001B36] hover:underline"
-          href={STORE_URL}
+          href="/products"
           id="promotions"
-          rel="noopener noreferrer"
-          target="_blank"
         >
           Offre spéciale — pour partager l&apos;amour →
         </Link>

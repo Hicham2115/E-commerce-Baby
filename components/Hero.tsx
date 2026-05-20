@@ -29,20 +29,14 @@ export default function Hero() {
               asChild
               className="h-12 rounded-full bg-[#001B36] px-8 text-sm font-medium text-white hover:bg-[#001B36]/90"
             >
-              <Link
-                href="https://chahrazadbaby.com/"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Découvrir la boutique
-              </Link>
+              <Link href="/products">Découvrir la boutique</Link>
             </Button>
             <Button
               asChild
               variant="outline"
               className="h-12 rounded-full border-[#D4D0C8] bg-white px-8 text-sm font-medium text-[#001B36] hover:bg-white/80"
             >
-              <Link href="/#promotions">Offres spéciales</Link>
+              <Link href="/products">Offres spéciales</Link>
             </Button>
           </div>
         </div>

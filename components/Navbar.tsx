@@ -47,7 +47,7 @@ const navigationLinks: NavLink[] = [
     match: "/products",
     genre: "garcon",
   },
-  { href: "#", label: "Idée cadeaux" },
+  { href: "/products", label: "Idée cadeaux", match: "/products" },
   { href: "/#contact", label: "Contact" },
   { href: "/#about", label: "À propos" },
 ];

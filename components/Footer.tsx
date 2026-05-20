@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUp } from "lucide-react";
+import { useLenis } from "lenis/react";
 
 const STORE_URL = "https://chahrazadbaby.com/";
 
@@ -9,17 +10,17 @@ const linkColumns = [
   {
     title: "À propos",
     links: [
-      { label: "Notre histoire", href: STORE_URL },
-      { label: "Blog", href: STORE_URL },
-      { label: "Avis clients", href: STORE_URL },
+      { label: "Notre histoire", href: "/#about" },
+      { label: "Boutique", href: "/products" },
+      { label: "Avis clients", href: "/#about" },
     ],
   },
   {
     title: "Support",
     links: [
       { label: "Contact", href: "/#contact" },
-      { label: "Livraison & retours", href: STORE_URL },
-      { label: "FAQ", href: STORE_URL },
+      { label: "Livraison & retours", href: "/products" },
+      { label: "FAQ", href: "/products" },
     ],
   },
   {
@@ -31,10 +32,6 @@ const linkColumns = [
     ],
   },
 ];
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
 
 function BrandMark() {
   return (
@@ -111,6 +108,16 @@ function FieldLine({
 }
 
 export default function Footer() {
+  const lenis = useLenis();
+
+  const scrollToTop = () => {
+    if (lenis) {
+      lenis.scrollTo(0);
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <footer>
       {/* CTA — contact form (scroll target for navbar) */}

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-const STORE_URL = "https://chahrazadbaby.com/";
 
 const features = [
   {
@@ -88,9 +87,7 @@ export default function PourquoiNousChoisir() {
 
             <Link
               className="mt-8 inline-block text-sm font-medium text-[#9B4D44] underline-offset-4 hover:text-[#001B36] hover:underline"
-              href={STORE_URL}
-              rel="noopener noreferrer"
-              target="_blank"
+              href="/products"
             >
               Découvrir notre boutique →
             </Link>

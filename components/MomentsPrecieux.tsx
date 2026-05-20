@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-
-const STORE_URL = "https://chahrazadbaby.com/";
+import { buildProductsQuery } from "@/lib/shopify/filters";
 
 type Tile =
   | {
@@ -28,7 +27,7 @@ type Tile =
 
 const tiles: Tile[] = [
   {
-    href: STORE_URL,
+    href: "/products",
     label: "Bébé fille & garçon",
     title: "Grenouillères & pyjamas",
     description: "Packs 2, 4 ou 6 pièces — 100% coton, dès la naissance.",
@@ -39,7 +38,7 @@ const tiles: Tile[] = [
       "md:col-span-7 md:row-span-2 min-h-[280px] md:min-h-[420px]",
   },
   {
-    href: STORE_URL,
+    href: "/products",
     label: "Pack clinique",
     title: "Sortie de maternité",
     description: "Ensembles prêts pour les premiers jours à la clinique.",
@@ -49,7 +48,7 @@ const tiles: Tile[] = [
     className: "md:col-span-5 min-h-[200px]",
   },
   {
-    href: STORE_URL,
+    href: "/products",
     label: "Idée cadeaux",
     title: "Coffrets & accessoires",
     description: "Sacs, couvertures, produits de soin et ensembles cadeaux.",
@@ -59,7 +58,7 @@ const tiles: Tile[] = [
     className: "md:col-span-5 min-h-[200px]",
   },
   {
-    href: STORE_URL,
+    href: buildProductsQuery({}, { category: "bedding" }),
     label: "Boutique",
     title: "Parures de lit & sortie de bain",
     description:
@@ -114,8 +113,6 @@ export default function MomentsPrecieux() {
                 key={tile.title}
                 className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#E8E4DC] bg-white p-6 shadow-[0_16px_40px_-12px_rgba(0,27,54,0.08)] transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#9B4D44]/30 hover:shadow-[0_24px_48px_-12px_rgba(0,27,54,0.12)] md:rounded-3xl md:p-8 ${tile.className}`}
                 href={tile.href}
-                rel="noopener noreferrer"
-                target="_blank"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -139,8 +136,6 @@ export default function MomentsPrecieux() {
                 key={tile.title}
                 className={`group relative overflow-hidden rounded-2xl shadow-sm transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_20px_40px_-12px_rgba(0,27,54,0.2)] md:rounded-3xl ${tile.className}`}
                 href={tile.href}
-                rel="noopener noreferrer"
-                target="_blank"
               >
                 <Image
                   alt={tile.alt}
