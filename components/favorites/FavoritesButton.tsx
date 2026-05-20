@@ -2,11 +2,12 @@
 
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useFavorites } from "@/stores/favorites-store";
+import { useFavorites, useFavoritesHydrated } from "@/stores/favorites-store";
 
 export default function FavoritesButton() {
   const { favorites, openFavorites } = useFavorites();
-  const count = favorites.length;
+  const hydrated = useFavoritesHydrated();
+  const count = hydrated ? favorites.length : 0;
 
   return (
     <Button

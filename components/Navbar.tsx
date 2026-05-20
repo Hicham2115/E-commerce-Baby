@@ -3,8 +3,8 @@
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -21,14 +21,33 @@ import CartButton from "@/components/cart/CartButton";
 import FavoritesButton from "@/components/favorites/FavoritesButton";
 import PromoBar from "@/components/PromoBar";
 import logo from "@/app/assets/logo.png";
+import { productsUrlByGenre } from "@/lib/shopify/filters";
 import { cn } from "@/lib/utils";
 
-const navigationLinks = [
+type NavLink = {
+  href: string;
+  label: string;
+  /** Path prefix for active state (e.g. /products) */
+  match?: string;
+  /** Genre filter slug when link targets filtered catalog */
+  genre?: "fille" | "garcon" | "unisexe";
+};
+
+const navigationLinks: NavLink[] = [
   { href: "/products", label: "Boutique", match: "/products" },
-  { href: "#", label: "Bébé fille" },
-  { href: "#", label: "Bébé garçon" },
+  {
+    href: productsUrlByGenre("fille"),
+    label: "Bébé fille",
+    match: "/products",
+    genre: "fille",
+  },
+  {
+    href: productsUrlByGenre("garcon"),
+    label: "Bébé garçon",
+    match: "/products",
+    genre: "garcon",
+  },
   { href: "#", label: "Idée cadeaux" },
-  // { href: "/#promotions", label: "Promotion" },
   { href: "/#contact", label: "Contact" },
   { href: "/#about", label: "À propos" },
 ];
@@ -36,14 +55,26 @@ const navigationLinks = [
 const navLinkClassName =
   "relative rounded-md bg-transparent px-2.5 py-2 text-sm font-medium text-[#001B36] transition-colors hover:bg-transparent hover:text-[#9B4D44] data-active:text-[#9B4D44] lg:px-3";
 
-export default function Navbar() {
+function NavbarInner() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeGenre = searchParams.get("genre");
 
-  const isActive = (link: (typeof navigationLinks)[number]) =>
-    link.match
-      ? pathname === link.match || pathname.startsWith(`${link.match}/`)
-      : false;
+  const isActive = (link: NavLink) => {
+    if (link.genre) {
+      return (
+        pathname === "/products" && activeGenre === link.genre
+      );
+    }
+    if (link.match === "/products") {
+      return pathname === "/products" && !activeGenre;
+    }
+    if (link.match) {
+      return pathname === link.match || pathname.startsWith(`${link.match}/`);
+    }
+    return false;
+  };
 
   return (
     <header className="sticky top-0 z-50">
@@ -131,5 +162,37 @@ export default function Navbar() {
         </div>
       </div>
     </header>
+  );
+}
+
+function NavbarFallback() {
+  return (
+    <header className="sticky top-0 z-50">
+      <PromoBar />
+      <div className="border-b border-[#E8E4DC] bg-[#F9F8F6]/90 backdrop-blur-md">
+        <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 md:px-8">
+          <Link className="shrink-0" href="/">
+            <Image
+              alt="Chahrazad Baby — vêtements bébé naissance"
+              className="h-10 w-auto md:h-11"
+              priority
+              src={logo}
+            />
+          </Link>
+          <div className="flex items-center gap-1">
+            <FavoritesButton />
+            <CartButton />
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+export default function Navbar() {
+  return (
+    <Suspense fallback={<NavbarFallback />}>
+      <NavbarInner />
+    </Suspense>
   );
 }

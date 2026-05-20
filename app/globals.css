@@ -125,7 +125,14 @@
   }
   html {
     @apply font-sans;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
   [id] {
     scroll-margin-top: 7.5rem;

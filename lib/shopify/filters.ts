@@ -106,6 +106,10 @@ export function filterProducts(
   return result;
 }
 
+export function productsUrlByGenre(genre: "fille" | "garcon" | "unisexe") {
+  return buildProductsQuery({}, { genre });
+}
+
 export function buildProductsQuery(
   base: CatalogSearchParams,
   updates: Partial<CatalogSearchParams>,

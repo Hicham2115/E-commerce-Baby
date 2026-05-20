@@ -2,7 +2,7 @@
 
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useFavorites } from "@/stores/favorites-store";
+import { useFavorites, useFavoritesHydrated } from "@/stores/favorites-store";
 import { productToFavorite } from "@/lib/favorites/types";
 
 type FavoriteToggleProps = {
@@ -17,7 +17,8 @@ export default function FavoriteToggle({
   size = "md",
 }: FavoriteToggleProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
-  const active = isFavorite(product.handle);
+  const hydrated = useFavoritesHydrated();
+  const active = hydrated && isFavorite(product.handle);
 
   const iconSize = size === "sm" ? "size-4" : "size-5";
 

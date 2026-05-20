@@ -56,6 +56,7 @@ export default function FavoritesDrawer() {
         aria-labelledby="favorites-title"
         aria-modal="true"
         className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-[#F9F8F6] shadow-2xl"
+        data-lenis-prevent
         role="dialog"
       >
         <div className="flex items-center justify-between border-b border-[#E8E4DC] px-5 py-4">

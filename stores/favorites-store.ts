@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { addWishlistItemToCartAction } from "@/app/actions/wishlist";
@@ -79,9 +80,22 @@ export const useFavoritesStore = create<FavoritesStore>()(
     {
       name: FAVORITES_STORAGE_KEY,
       partialize: (state) => ({ favorites: state.favorites }),
+      skipHydration: true,
     },
   ),
 );
+
+/** True after persisted favorites are loaded from localStorage (client only). */
+export function useFavoritesHydrated() {
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(useFavoritesStore.persist.hasHydrated());
+    return useFavoritesStore.persist.onFinishHydration(() => setHydrated(true));
+  }, []);
+
+  return hydrated;
+}
 
 /** Selector hook — same API as the former Context hook */
 export function useFavorites() {
