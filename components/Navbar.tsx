@@ -1,6 +1,6 @@
 "use client";
 
-import { Handbag, Heart, Menu } from "lucide-react";
+import { Heart, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import CartButton from "@/components/cart/CartButton";
 import PromoBar from "@/components/PromoBar";
 import logo from "@/app/assets/logo.png";
 import { cn } from "@/lib/utils";
@@ -134,20 +135,7 @@ export default function Navbar() {
                 <Heart className="size-5" strokeWidth={1.75} />
               </Link>
             </Button>
-            <Button
-              aria-label="Panier"
-              asChild
-              className="relative size-10 text-[#001B36] hover:bg-[#001B36]/5 hover:text-[#9B4D44]"
-              size="icon"
-              variant="ghost"
-            >
-              <Link href="#">
-                <Handbag className="size-5" strokeWidth={1.75} />
-                <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-[#9B4D44] text-[10px] font-semibold text-white">
-                  0
-                </span>
-              </Link>
-            </Button>
+            <CartButton />
           </div>
         </div>
       </div>

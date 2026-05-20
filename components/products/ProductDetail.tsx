@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   Feather,
+  Loader2,
   RotateCcw,
   Star,
   Tag,
@@ -11,17 +11,28 @@ import {
   WashingMachine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/components/cart/CartProvider";
 import {
   formatPrice,
   getDiscountLabel,
   type ShopifyProductDetail,
 } from "@/lib/shopify/product";
+import {
+  findVariantBySelections,
+  productHasVariantSizes,
+} from "@/lib/shopify/variant-utils";
 
 type ProductDetailProps = {
   product: ShopifyProductDetail;
 };
 
-function StarRating({ rating = 4.5, reviewCount = 48 }: { rating?: number; reviewCount?: number }) {
+function StarRating({
+  rating = 4.5,
+  reviewCount = 48,
+}: {
+  rating?: number;
+  reviewCount?: number;
+}) {
   return (
     <div className="flex items-center gap-1.5">
       <div className="flex items-center gap-0.5">
@@ -45,18 +56,27 @@ function StarRating({ rating = 4.5, reviewCount = 48 }: { rating?: number; revie
 }
 
 export default function ProductDetail({ product }: ProductDetailProps) {
+  const { addItem, isPending } = useCart();
+  const [selectedGenre, setSelectedGenre] = useState(product.genres[0] ?? "");
   const [selectedSize, setSelectedSize] = useState(product.sizes[0]?.label ?? "");
+  const [error, setError] = useState<string | null>(null);
+
+  const showGenrePicker = product.genres.length > 0;
+  const showSizePicker = productHasVariantSizes(product.sizes);
 
   const selectedVariant = useMemo(
     () =>
-      product.variants.find((variant) =>
-        variant.selectedOptions.some(
-          (opt) =>
-            opt.value === selectedSize ||
-            normalize(opt.value) === normalize(selectedSize),
-        ),
-      ) ?? product.variants[0],
-    [product.variants, selectedSize],
+      findVariantBySelections(product.variants, {
+        genre: showGenrePicker ? selectedGenre : undefined,
+        size: showSizePicker ? selectedSize : undefined,
+      }) ?? product.variants[0],
+    [
+      product.variants,
+      selectedGenre,
+      selectedSize,
+      showGenrePicker,
+      showSizePicker,
+    ],
   );
 
   const price = selectedVariant?.price ?? product.price;
@@ -65,9 +85,29 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   const currencyCode = selectedVariant?.currencyCode ?? product.currencyCode;
   const discount = getDiscountLabel(price, compareAtPrice);
 
+  const canAddToCart =
+    selectedVariant?.availableForSale &&
+    product.availableForSale &&
+    Boolean(selectedVariant?.id);
+
   const plainDescription =
     product.description ||
     "Conçu pour le confort de bébé, ce vêtement allie douceur, respirabilité et finitions soignées — idéal pour les peaux sensibles.";
+
+  async function handleAddToCart() {
+    if (!selectedVariant?.id) {
+      setError("Veuillez choisir une option.");
+      return;
+    }
+    setError(null);
+    try {
+      await addItem(selectedVariant.id, 1);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Impossible d'ajouter au panier.",
+      );
+    }
+  }
 
   return (
     <div className="flex flex-col">
@@ -123,46 +163,85 @@ export default function ProductDetail({ product }: ProductDetailProps) {
         </div>
       ) : null}
 
-      <div className="mt-8">
-        <div className="mb-3 flex items-center justify-between">
-          <span className="text-sm font-medium text-[#001B36]">
-            Choisir la taille
+      {showGenrePicker ? (
+        <div className="mt-8">
+          <span className="mb-3 block text-sm font-medium text-[#001B36]">
+            Choisir le genre
           </span>
-          <button
-            className="text-xs text-[#5C5C5C] underline underline-offset-2 hover:text-[#001B36]"
-            type="button"
-          >
-            Guide des tailles
-          </button>
+          <div className="flex flex-wrap gap-2">
+            {product.genres.map((genre) => (
+              <button
+                key={genre}
+                className={`min-w-[5.5rem] rounded-xl border px-4 py-2.5 text-sm transition-colors ${
+                  selectedGenre === genre
+                    ? "border-[#001B36] bg-[#001B36] text-white"
+                    : "border-[#D4D0C8] bg-white text-[#001B36] hover:border-[#001B36]/40"
+                }`}
+                onClick={() => setSelectedGenre(genre)}
+                type="button"
+              >
+                {genre}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {product.sizes.map((size) => (
+      ) : null}
+
+      {showSizePicker ? (
+        <div className={showGenrePicker ? "mt-6" : "mt-8"}>
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-sm font-medium text-[#001B36]">
+              Choisir la taille
+            </span>
             <button
-              key={size.label}
-              className={`min-w-[5.5rem] rounded-xl border px-4 py-2.5 text-sm transition-colors ${
-                selectedSize === size.label
-                  ? "border-[#001B36] bg-[#001B36] text-white"
-                  : "border-[#D4D0C8] bg-white text-[#001B36] hover:border-[#001B36]/40"
-              }`}
-              onClick={() => setSelectedSize(size.label)}
+              className="text-xs text-[#5C5C5C] underline underline-offset-2 hover:text-[#001B36]"
               type="button"
             >
-              {size.label}
+              Guide des tailles
             </button>
-          ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {product.sizes.map((size) => (
+              <button
+                key={size.label}
+                className={`min-w-[5.5rem] rounded-xl border px-4 py-2.5 text-sm transition-colors ${
+                  selectedSize === size.label
+                    ? "border-[#001B36] bg-[#001B36] text-white"
+                    : "border-[#D4D0C8] bg-white text-[#001B36] hover:border-[#001B36]/40"
+                }`}
+                onClick={() => setSelectedSize(size.label)}
+                type="button"
+              >
+                {size.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       <Button
-        asChild
-        className="mt-8 h-14 w-full rounded-2xl bg-[#001B36] text-base font-semibold hover:bg-[#001B36]/90"
+        className="mt-8 h-14 w-full rounded-2xl bg-[#001B36] text-base font-semibold hover:bg-[#001B36]/90 disabled:opacity-60"
+        disabled={!canAddToCart || isPending}
+        onClick={handleAddToCart}
+        type="button"
       >
-        <Link href="/#contact">
-          {product.availableForSale
-            ? "Ajouter au Panier"
-            : "Indisponible — nous contacter"}
-        </Link>
+        {isPending ? (
+          <>
+            <Loader2 aria-hidden className="mr-2 size-5 animate-spin" />
+            Ajout en cours…
+          </>
+        ) : canAddToCart ? (
+          "Ajouter au Panier"
+        ) : (
+          "Indisponible"
+        )}
       </Button>
+
+      {error ? (
+        <p className="mt-2 text-sm text-[#9B4D44]" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-xs text-[#5C5C5C]">
         <span className="inline-flex items-center gap-2">
@@ -213,11 +292,4 @@ export default function ProductDetail({ product }: ProductDetailProps) {
       </div>
     </div>
   );
-}
-
-function normalize(s: string) {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
 }
