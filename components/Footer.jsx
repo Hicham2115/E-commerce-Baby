@@ -101,6 +101,7 @@ function FieldLine({
 
 export default function Footer() {
   const lenis = useLenis();
+  const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
     if (lenis) {
@@ -216,7 +217,16 @@ export default function Footer() {
           {/* Bottom bar — copyright | terms | back to top */}
           <div className="mt-14 grid grid-cols-1 items-center gap-4 border-t border-[#001B36]/25 pt-8 sm:grid-cols-3">
             <p className="text-center text-sm text-[#001B36]/80 sm:text-left">
-              Copyright © Chahrazad Baby
+              &copy; {currentYear} – Designed &amp; developed by{" "}
+              <a
+                className="underline"
+                href="https://www.stallionadvertising.ma/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Stallion Advertising
+              </a>
+              .
             </p>
             <Link
               className="text-sm text-[#001B36]/80 transition-colors hover:text-[#001B36] text-center"
