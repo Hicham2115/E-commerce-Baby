@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { Toaster } from "sonner";
 import CartDrawer from "@/components/cart/CartDrawer";
 import FavoritesDrawer from "@/components/favorites/FavoritesDrawer";
 import SmoothScroll from "@/components/providers/SmoothScroll";
@@ -25,6 +26,7 @@ export default function AppProviders({ children }) {
       {children}
       <CartDrawer />
       <FavoritesDrawer />
+      <Toaster position="bottom-right" richColors />
     </SmoothScroll>
   );
 }

@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, Loader2, ShoppingBag, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/shopify/catalog";
 import { useFavorites } from "@/stores/favorites-store";
@@ -19,8 +20,6 @@ export default function FavoritesDrawer() {
     removeFavorite,
     addFavoriteToCart,
   } = useFavorites();
-  const [lineError, setLineError] = useState(null);
-
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -31,7 +30,6 @@ export default function FavoritesDrawer() {
   if (!isOpen) return null;
 
   async function handleAddToCart(handle) {
-    setLineError(null);
     const result = await addFavoriteToCart(handle);
     if (!result.ok) {
       if (result.needsOptions) {
@@ -39,7 +37,7 @@ export default function FavoritesDrawer() {
         router.push(`/products/${handle}`);
         return;
       }
-      setLineError(result.message ?? "Erreur lors de l'ajout au panier.");
+      toast.error(result.message ?? "Erreur lors de l'ajout au panier.");
     }
   }
 
@@ -179,11 +177,6 @@ export default function FavoritesDrawer() {
           )}
         </div>
 
-        {lineError ? (
-          <p className="border-t border-[#E8E4DC] bg-white px-5 py-3 text-sm text-[#9B4D44]">
-            {lineError}
-          </p>
-        ) : null}
       </aside>
     </div>
   );

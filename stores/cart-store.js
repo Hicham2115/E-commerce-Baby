@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { toast } from "sonner";
 import {
   addToCartAction,
   getCartAction,
@@ -29,6 +30,8 @@ export const useCartStore = create((set) => ({
     try {
       const cart = await addToCartAction(variantId, quantity);
       set({ cart, isOpen: true });
+    } catch {
+      toast.error("Impossible d'ajouter l'article au panier. Veuillez réessayer.");
     } finally {
       set({ isPending: false });
     }
@@ -39,6 +42,8 @@ export const useCartStore = create((set) => ({
     try {
       const cart = await updateCartLineAction(lineId, quantity);
       set({ cart });
+    } catch {
+      toast.error("Impossible de mettre à jour la quantité. Veuillez réessayer.");
     } finally {
       set({ isPending: false });
     }
@@ -49,6 +54,8 @@ export const useCartStore = create((set) => ({
     try {
       const cart = await removeCartLineAction(lineId);
       set({ cart });
+    } catch {
+      toast.error("Impossible de retirer l'article. Veuillez réessayer.");
     } finally {
       set({ isPending: false });
     }
