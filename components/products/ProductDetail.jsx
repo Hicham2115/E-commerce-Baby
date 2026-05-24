@@ -13,10 +13,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/stores/cart-store";
 import FavoriteToggle from "@/components/favorites/FavoriteToggle";
+import { formatPrice, getDiscountLabel } from "@/lib/shopify/catalog";
 import {
   findVariantBySelections,
-  formatPrice,
-  getDiscountLabel,
   productHasVariantSizes,
 } from "@/lib/shopify/product";
 
@@ -174,7 +173,7 @@ export default function ProductDetail({ product }) {
             {product.genres.map((genre) => (
               <button
                 key={genre}
-                className={`min-w-[5.5rem] rounded-xl border px-4 py-2.5 text-sm transition-colors ${
+                className={`min-w-22 rounded-xl border px-4 py-2.5 text-sm transition-colors ${
                   selectedGenre === genre
                     ? "border-[#001B36] bg-[#001B36] text-white"
                     : "border-[#D4D0C8] bg-white text-[#001B36] hover:border-[#001B36]/40"
@@ -206,7 +205,7 @@ export default function ProductDetail({ product }) {
             {product.sizes.map((size) => (
               <button
                 key={size.label}
-                className={`min-w-[5.5rem] rounded-xl border px-4 py-2.5 text-sm transition-colors ${
+                className={`min-w-22 rounded-xl border px-4 py-2.5 text-sm transition-colors ${
                   selectedSize === size.label
                     ? "border-[#001B36] bg-[#001B36] text-white"
                     : "border-[#D4D0C8] bg-white text-[#001B36] hover:border-[#001B36]/40"
