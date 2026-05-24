@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import ProductsCatalog from "@/components/products/ProductsCatalog";
-import { fetchCatalog } from "@/lib/shopify/catalog";
+import { fetchCatalog } from "@/lib/shopify/products";
 
 async function ProductsContent({ searchParams }) {
   const catalog = await fetchCatalog(searchParams);

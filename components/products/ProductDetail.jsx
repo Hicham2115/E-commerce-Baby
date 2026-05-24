@@ -13,11 +13,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/stores/cart-store";
 import FavoriteToggle from "@/components/favorites/FavoriteToggle";
-import { formatPrice, getDiscountLabel } from "@/lib/shopify/catalog";
 import {
   findVariantBySelections,
+  formatPrice,
+  getDiscountLabel,
   productHasVariantSizes,
-} from "@/lib/shopify/product";
+} from "@/lib/shopify/products";
 
 function StarRating({ rating = 4.5, reviewCount = 48 }) {
   return (

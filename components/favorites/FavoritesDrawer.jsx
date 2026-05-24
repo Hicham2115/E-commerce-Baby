@@ -7,7 +7,7 @@ import { Heart, Loader2, ShoppingBag, X } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { formatPrice } from "@/lib/shopify/catalog";
+import { formatPrice } from "@/lib/shopify/products";
 import { useFavorites } from "@/stores/favorites-store";
 
 export default function FavoritesDrawer() {

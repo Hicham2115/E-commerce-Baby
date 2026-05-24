@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import FavoriteToggle from "@/components/favorites/FavoriteToggle";
-import { formatPrice } from "@/lib/shopify/catalog";
+import { formatPrice } from "@/lib/shopify/products";
 
 export default function ProductCard({ product }) {
   return (

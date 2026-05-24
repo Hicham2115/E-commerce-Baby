@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ProductCard from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/button";
-import { fetchCatalog } from "@/lib/shopify/catalog";
+import { fetchCatalog } from "@/lib/shopify/products";
 import { FadeInUp, StaggerContainer, StaggerItem } from "@/components/motion";
 
 export default async function FeaturedProducts() {

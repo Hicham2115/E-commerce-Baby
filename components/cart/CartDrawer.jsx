@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { formatPrice } from "@/lib/shopify/catalog";
+import { formatPrice } from "@/lib/shopify/products";
 import { useCart } from "@/stores/cart-store";
 
 export default function CartDrawer() {

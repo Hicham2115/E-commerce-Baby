@@ -9,7 +9,7 @@ import { genreValueToSlug } from "@/lib/shopify/filters";
 import {
   fetchProductByHandle,
   fetchSimilarProducts,
-} from "@/lib/shopify/product";
+} from "@/lib/shopify/products";
 
 export async function generateMetadata({ params }) {
   const { handle } = await params;

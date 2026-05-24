@@ -1,8 +1,7 @@
 "use server";
 
 import { addToCartAction } from "@/app/actions/cart";
-import { fetchProductByHandle } from "@/lib/shopify/product";
-import { productHasVariantSizes } from "@/lib/shopify/product";
+import { fetchProductByHandle, productHasVariantSizes } from "@/lib/shopify/products";
 
 export async function addWishlistItemToCartAction(handle) {
   try {
