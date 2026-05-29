@@ -248,7 +248,7 @@ export default function ProductDetail({ product }) {
       <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-xs text-[#5C5C5C]">
         <span className="inline-flex items-center gap-2">
           <Truck aria-hidden className="size-4 text-[#001B36]" />
-          Livraison offerte dès 80€
+          Livraison offerte dès 400 DH
         </span>
         <span className="inline-flex items-center gap-2">
           <RotateCcw aria-hidden className="size-4 text-[#001B36]" />

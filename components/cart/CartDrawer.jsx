@@ -5,12 +5,17 @@ import Link from "next/link";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useCartQuery, useRemoveCartLine, useUpdateCartLine } from "@/hooks/use-cart";
 import { formatPrice } from "@/lib/shopify/products";
-import { useCart } from "@/stores/cart-store";
+import { useCartStore } from "@/stores/cart-store";
 
 export default function CartDrawer() {
-  const { cart, isOpen, closeCart, isPending, updateLine, removeLine } =
-    useCart();
+  const { data: cart } = useCartQuery();
+  const { mutate: updateLine, isPending: isUpdating } = useUpdateCartLine();
+  const { mutate: removeLine, isPending: isRemoving } = useRemoveCartLine();
+  const isPending = isUpdating || isRemoving;
+  const isOpen = useCartStore((s) => s.isOpen);
+  const closeCart = useCartStore((s) => s.closeCart);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -133,7 +138,7 @@ export default function CartDrawer() {
                           className="px-2.5 py-1.5 text-[#001B36] disabled:opacity-40"
                           disabled={isPending}
                           onClick={() =>
-                            updateLine(line.id, line.quantity - 1)
+                            updateLine({ lineId: line.id, quantity: line.quantity - 1 })
                           }
                           type="button"
                         >
@@ -147,7 +152,7 @@ export default function CartDrawer() {
                           className="px-2.5 py-1.5 text-[#001B36] disabled:opacity-40"
                           disabled={isPending}
                           onClick={() =>
-                            updateLine(line.id, line.quantity + 1)
+                            updateLine({ lineId: line.id, quantity: line.quantity + 1 })
                           }
                           type="button"
                         >
